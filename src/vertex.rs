@@ -1,9 +1,9 @@
-pub use spark_macros::{vertex, Vertex};
+pub use spark_macros::{vertex, unsafe_vertex, Vert};
 
 use bytemuck::Pod;
 use wgpu::VertexBufferLayout;
 
-pub trait Vertex: Pod {
+pub trait Vert: Pod {
     fn buffer_layout<'l>() -> VertexBufferLayout<'l>;
 }
 
