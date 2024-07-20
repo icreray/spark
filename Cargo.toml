@@ -1,0 +1,9 @@
+[package]
+name = "spark"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+spark_macros = {path = "macros"}
+wgpu = "22.0.0"
+bytemuck = {version = "1.16.1", features = ["derive"]}
