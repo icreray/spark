@@ -22,4 +22,16 @@ mod tests {
             normal: [f32; 3]
         }
     }
+
+    #[test]
+    pub fn is_unsafe_vertex_attribute_compiled() {
+        #[repr(C)]
+        #[unsafe_vertex]
+        struct TestVertex {
+            #[attribute(0, Float32x3)]
+            position: [f32; 3],
+            #[attribute(1, Float32x3)]
+            normal: [f32; 3]
+        }
+    }
 }

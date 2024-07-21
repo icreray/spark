@@ -5,6 +5,12 @@ use syn::{
     Token, Ident, parse::{Parse, ParseStream}, Error
 };
 
+macro_rules! parsing_error {
+    ($span:expr, $message:expr) => {
+        return Err(Error::new_spanned(span, message))
+    };
+}
+
 pub(crate) fn unsafe_impl_bytemuck_types(ast: DeriveInput) -> TokenStream {
     let name = ast.ident;
     quote!(
@@ -15,7 +21,7 @@ pub(crate) fn unsafe_impl_bytemuck_types(ast: DeriveInput) -> TokenStream {
 
 pub(crate) fn derive_vertex(ast: DeriveInput) -> Result<TokenStream, Error> {
     let Data::Struct(DataStruct {fields, ..}) = ast.data else {
-        parse_error!(ast, "Deriving Vertex is supported only for structs")
+        parsing_error!(ast, "Deriving Vertex is supported only for structs")
     };
 
     let mut attributes = Vec::<TokenStream>::with_capacity(fields.len());
@@ -43,7 +49,7 @@ pub(crate) fn derive_vertex(ast: DeriveInput) -> Result<TokenStream, Error> {
 fn extract_attribute(field: &Field) -> Result<TokenStream, Error> {
     let Some(attribute) = field.attrs.iter()
         .find(|a| a.path().is_ident("attribute")) else {
-        parse_error!(field, "No #[attribute(<location>, <format>)] presented for field")
+        parsing_error!(field, "No #[attribute(<location>, <format>)] presented for field")
     };
 
     let VertexAttribute {location, format} = attribute.parse_args()?;
@@ -63,10 +69,4 @@ impl Parse for VertexAttribute {
         let format = input.parse::<Ident>()?;
         Ok(Self {location, format})
     }
-}
-
-macro_rules! parse_error {
-    ($span:expr, $message:expr) => {
-        return Err(Error::new_spanned(span, message))
-    };
 }
