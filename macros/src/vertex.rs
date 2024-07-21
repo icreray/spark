@@ -7,7 +7,7 @@ use syn::{
 
 macro_rules! parsing_error {
     ($span:expr, $message:expr) => {
-        return Err(Error::new_spanned(span, message))
+        return Err(Error::new_spanned($span, $message))
     };
 }
 
